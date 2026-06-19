@@ -291,9 +291,12 @@ void CEncTaskPool::SetGpuHangRecoveryFlag()
 
 void CEncTaskPool::ClearTasks()
 {
-    for (size_t i = 0; i < m_nPoolSize; i++)
+    if (m_pTasks)
     {
-        m_pTasks[i].Reset();
+        for (size_t i = 0; i < m_nPoolSize; i++)
+        {
+            m_pTasks[i].Reset();
+        }
     }
     m_nTaskBufferStart = 0;
 }
@@ -2271,6 +2274,7 @@ mfxStatus CEncodingPipeline::PreEncOneFrame(const ExtendedSurface& In, ExtendedS
         }
     }
     MSDK_CHECK_POINTER(pAux,  MFX_ERR_MEMORY_ALLOC);
+    MSDK_CHECK_POINTER(m_pmfxPreENC, MFX_ERR_NOT_INITIALIZED);
     for(;;)
     {
         pAux->encInput.InSurface = In.pSurface;
@@ -2304,6 +2308,7 @@ mfxStatus CEncodingPipeline::PreEncOneFrame(const ExtendedSurface& In, ExtendedS
 mfxStatus CEncodingPipeline::VPPOneFrame(const ExtendedSurface& In, ExtendedSurface& Out, const bool& skipFrame)
 {
     mfxStatus sts = MFX_ERR_NONE;
+    MSDK_CHECK_POINTER(m_pmfxVPP, MFX_ERR_NOT_INITIALIZED);
     for (;;)
     {
         sts = m_pmfxVPP->RunFrameVPPAsync(skipFrame ?  nullptr : In.pSurface,
@@ -2331,6 +2336,7 @@ mfxStatus CEncodingPipeline::VPPOneFrame(const ExtendedSurface& In, ExtendedSurf
 mfxStatus CEncodingPipeline::EncodeOneFrame(const ExtendedSurface& In, sTask*& pTask)
 {
     mfxStatus sts = MFX_ERR_NONE;
+    MSDK_CHECK_POINTER(m_pmfxENC, MFX_ERR_NOT_INITIALIZED);
     for (;;)
     {
         if (!m_bQPFileMode)
@@ -2389,6 +2395,7 @@ mfxStatus CEncodingPipeline::ConfigTCBRCTest(mfxFrameSurface1* pSurf)
             if (m_mfxEncParams.mfx.TargetKbps != newBitrate)
             {
                 m_mfxEncParams.mfx.TargetKbps = (mfxU16)newBitrate;
+                MSDK_CHECK_POINTER(m_pmfxENC, MFX_ERR_NOT_INITIALIZED);
                 sts = m_pmfxENC->Reset(&m_mfxEncParams);
             }
         }

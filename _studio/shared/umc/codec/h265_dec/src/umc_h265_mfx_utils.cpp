@@ -500,7 +500,7 @@ UMC::Status HeadersAnalyzer::DecodeHeader(UMC::MediaData * data, mfxBitstream *b
     {
         m_supplier->GetNalUnitSplitter()->MoveToStartCode(data); // move data pointer to start code
 
-        if (!m_isSPSFound) // move point to first start code
+        if (!m_isSPSFound && bs) // move point to first start code
         {
             bs->DataOffset = (mfxU32)((mfxU8*)data->GetDataPointer() - (mfxU8*)data->GetBufferPointer());
             bs->DataLength = (mfxU32)data->GetDataSize();

@@ -2205,7 +2205,7 @@ mfxI32 CMC::MCTF_RUN_ME_MC_H(
         e = 0;
         (this->*(pMCTF_NOA_func))(m_adaptControl);
     }
-    else
+    else if (task)
         res = task->AddSync();
     res = MCTF_SET_KERNELMeBi(GenxRefs, GenxRefs2, idxMV, idxMV2, DIVUP(p_ctrl->CropX, blsize), tsHeight, blSize, forwardRefDist, backwardRefDist);
 

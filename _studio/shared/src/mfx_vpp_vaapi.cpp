@@ -556,6 +556,8 @@ mfxStatus VAAPIVideoProcessing::Execute(mfxExecuteParams *pParams)
     VAStatus vaSts = VA_STATUS_SUCCESS;
 
     VAAPIVideoCORE* hwCore = dynamic_cast<VAAPIVideoCORE*>(m_core);
+    if (!hwCore)
+        return MFX_ERR_NULL_PTR;
     eMFXHWType hwType = hwCore->GetHWType();
 
     // NOTE the following variables should be visible till vaRenderPicture/vaEndPicture,

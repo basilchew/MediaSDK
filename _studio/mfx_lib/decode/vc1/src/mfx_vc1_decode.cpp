@@ -2140,6 +2140,8 @@ mfxStatus MFXVideoDECODEVC1::GetStatusReport()
 #if defined(MFX_VA_LINUX)
     VideoAccelerator *va;
     m_pCore->GetVA((mfxHDL*)&va, MFX_MEMTYPE_FROM_DECODE);
+    if (!va)
+        return MFX_ERR_NONE;
 
     UMC::VC1FrameDescriptor *pCurrDescriptor = m_pVC1VideoDecoder->m_pStore->GetFirstDS();
 

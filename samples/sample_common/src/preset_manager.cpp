@@ -78,7 +78,9 @@ CPresetManager::~CPresetManager()
 COutputPresetParameters CPresetManager::GetPreset(EPresetModes mode, mfxU32 codecFourCC, mfxF64 fps, mfxU32 width, mfxU32 height, bool isHWLib)
 {
     COutputPresetParameters retVal = GetBasicPreset(mode, codecFourCC);
-    *(dynamic_cast<CDependentPresetParameters*>(&retVal)) = GetDependentPresetParameters(mode, codecFourCC, fps, width, height,retVal.TargetUsage);
+    CDependentPresetParameters* pDep = dynamic_cast<CDependentPresetParameters*>(&retVal);
+    if (pDep)
+        *pDep = GetDependentPresetParameters(mode, codecFourCC, fps, width, height, retVal.TargetUsage);
 
     if (!isHWLib)
     {

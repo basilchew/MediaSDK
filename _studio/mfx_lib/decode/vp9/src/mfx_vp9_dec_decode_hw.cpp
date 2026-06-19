@@ -141,7 +141,7 @@ mfxStatus VideoDECODEVP9_HW::CleanRefList()
 {
     for (mfxI32 ref_index = 0; ref_index < NUM_REF_FRAMES; ++ref_index)
     {
-        if (m_frameInfo.ref_frame_map[ref_index] >= 0)
+        if (m_frameInfo.ref_frame_map[ref_index] >= 0 && m_FrameAllocator)
             MFX_CHECK((m_FrameAllocator->DecreaseReference(m_frameInfo.ref_frame_map[ref_index]) == UMC::UMC_OK), MFX_ERR_UNKNOWN);
 
         m_frameInfo.ref_frame_map[ref_index] = -1;
@@ -519,7 +519,8 @@ mfxStatus VideoDECODEVP9_HW::Close()
 void VideoDECODEVP9_HW::ResetFrameInfo()
 {
     CleanRefList();
-    m_framesStorage.reset(new FrameStorage(m_FrameAllocator.get()));
+    if (m_FrameAllocator)
+        m_framesStorage.reset(new FrameStorage(m_FrameAllocator.get()));
 
     memset(&m_frameInfo, 0, sizeof(m_frameInfo));
     m_frameInfo.currFrame = -1;

@@ -2686,6 +2686,8 @@ mfxStatus CH264FrameReader::PrepareNextFrame(mfxBitstream *in, mfxBitstream **ou
         if (sts != MFX_ERR_NONE)
             return sts;
     }
+    if (NULL == m_frame)
+        return MFX_ERR_NULL_PTR;
 
     if (m_plainBufferSize < m_frame->DataLength)
     {
@@ -2700,6 +2702,9 @@ mfxStatus CH264FrameReader::PrepareNextFrame(mfxBitstream *in, mfxBitstream **ou
             return MFX_ERR_MEMORY_ALLOC;
         m_plainBufferSize = m_frame->DataLength;
     }
+
+    if (NULL == m_plainBuffer)
+        return MFX_ERR_MEMORY_ALLOC;
 
     MSDK_MEMCPY_BUF(m_plainBuffer, 0, m_plainBufferSize, m_frame->Data, m_frame->DataLength);
 
